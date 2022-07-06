@@ -134,7 +134,10 @@ async function instantiateModule(
   const pendingDeps: string[] = []
 
   const ssrImport = async (dep: string) => {
-    if (dep[0] !== '.' && dep[0] !== '/') {
+    // allow url imports (node 18 experimental)
+    if (dep.startsWith('https:')) {
+      return import(dep)
+    } else if (dep[0] !== '.' && dep[0] !== '/') {
       return nodeImport(dep, mod.file!, resolveOptions)
     }
     dep = unwrapId(dep)
