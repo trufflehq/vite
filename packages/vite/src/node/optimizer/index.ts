@@ -122,8 +122,8 @@ export interface DepOptimizationConfig {
   /**
    * Disables dependencies optimizations, true disables the optimizer during
    * build and dev. Pass 'build' or 'dev' to only disable the optimizer in
-   * one of the modes. Deps optimization is enabled by default in both
-   * @default false
+   * one of the modes. Deps optimization is enabled by default in dev only.
+   * @default 'build'
    * @experimental
    */
   disabled?: boolean | 'build' | 'dev'
@@ -214,7 +214,8 @@ export interface DepOptimizationMetadata {
 }
 
 /**
- * Used by Vite CLI when running `vite optimize`
+ * Scan and optimize dependencies within a project.
+ * Used by Vite CLI when running `vite optimize`.
  */
 export async function optimizeDeps(
   config: ResolvedConfig,
@@ -564,8 +565,7 @@ export async function runOptimizeDeps(
         rollupOptionsExternal.some((ext) => typeof ext !== 'string')
       ) {
         throw new Error(
-          `[vite] 'build.rollupOptions.external' can only be an array of strings or a string.\n` +
-            `You can turn on 'legacy.buildRollupPluginCommonjs' to support more advanced options.`
+          `[vite] 'build.rollupOptions.external' can only be an array of strings or a string when using esbuild optimization at build time.`
         )
       }
       external.push(...(rollupOptionsExternal as string[]))
